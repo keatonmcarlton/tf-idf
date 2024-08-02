@@ -43,6 +43,7 @@ class HashTable:
         self.items = 0
         self.resized = 0
 
+    #TODO: deletion?
     def create_buckets(self):
         return [[] for _ in range(self.size)]
 
