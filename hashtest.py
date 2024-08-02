@@ -15,6 +15,7 @@ def main():
             SCRIPT = int(input("Enter script (use positive integer): "))
             myhash.set_val(WORD, SCRIPT)
             print()
+            print(f"Hash value for this word: {myhash.get_possible_hash_value(WORD)}")
             print(f"This script count of this word: {myhash.get_script_val(WORD, SCRIPT)}")
             print(f"Total count of this word: {myhash.get_total_val(WORD)}")
             print(f"Current Load Factor: {myhash.items / myhash.size}")

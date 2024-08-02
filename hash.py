@@ -115,8 +115,11 @@ class HashTable:
         else:
             return "No record found"
 
+    def get_possible_hash_value(self, input_word):
+        return hash_djb2(input_word) % self.size
+
     def print_hash_table(self):
         for bucket in self.hash_table:
             for word in bucket:
                 total_num = sum(word.script)
-                print(f"{word.word}: {total_num}")
+                print(f"({self.get_possible_hash_value(word.word)}). {word.word}: {total_num}")
