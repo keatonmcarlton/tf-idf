@@ -16,7 +16,7 @@ def hash_djb2(s):
         hash = ((hash << 5) + hash) + ord(x)
     return hash & 0xFFFFFFFF
 
-
+# class for each individual word object in a script
 class Word:
 
     def __init__(self, word, script, size):
@@ -31,15 +31,18 @@ class Word:
     def increment_script(self, input_script):
         self.script[input_script] += 1
 
+    # returns number of documents containing a term
     def get_total_val(self):
         return sum(self.script)
 
     def get_script_val(self, script):
         return self.script[script]
 
-
+    # idf = log(# of documents / # of documents that contain term)
+    # using add one smoothing to avoid dividing by zero
     def idf(self):
-        return math.log10( (self.size) / (self.get_total_val() + 1)) + 1
+        return math.log10(self.size / (self.get_total_val() + 1)) + 1
+
 
 class HashTable:
     def __init__(self, size):

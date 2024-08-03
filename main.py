@@ -5,12 +5,17 @@ import os
 from nltk import WordNetLemmatizer
 
 import hash
+nltk.download("stopwords")
+stopwords = set(nltk.corpus.stopwords.words("english"))
+
 
 def tfidf(hash_table, word_count_dictionary, word, number_to_name_dict):
     tfidf_dict = {}
     for i, word_count in word_count_dictionary.items():
         idf = hash_table.get(word).idf()
+        # tf = # of times word appears in document / total number of words in document
         tf = hash_table.get(word).script[i] / word_count
+        # tf-idf = tf * idf
         tfidf_dict[number_to_name_dict[i]] = tf * idf
     tfidf_dict = dict(sorted(tfidf_dict.items(), key=lambda guy: guy[1], reverse=True))
     print("Top scorers:")
@@ -19,6 +24,7 @@ def tfidf(hash_table, word_count_dictionary, word, number_to_name_dict):
         if count < 6 and score != 0:
             print(f"({count}). {name}: {score:.2e}")
             count += 1
+
 
 def split(file_name):
     pieces = file_name.split('_', 2)
@@ -31,7 +37,7 @@ def main():
     number_to_name_dict = {}
     word_count_dict = {}
     # this is the name of the folder that holds the text files of movie scripts
-    file_folder = r"./raw_text_lemmas/"
+    file_folder = r"C:/Users/Lily/Downloads/raw_text_lemmas/raw_text_lemmas"
     num_files = 0
 
     for file in os.listdir(file_folder):
@@ -68,9 +74,9 @@ def main():
             words = stuff.split()
             for word in words:
                 if word[0].isalnum():
-                    movie_hash.set_val(word, i)
+                    if word not in stopwords:
+                        movie_hash.set_val(word, i)
         f.close()
-
 
     print(f"Total entries: {running_entries_count:,}")
     exit_program = False
