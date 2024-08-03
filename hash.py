@@ -5,10 +5,9 @@
 
 # !/usr/bin/env python
 # encoding: utf-8
-
+import math
 
 LOAD_FACTOR_LIMIT = 0.7
-SCRIPT_SIZE = 200
 
 
 def hash_djb2(s):
@@ -20,13 +19,11 @@ def hash_djb2(s):
 
 class Word:
 
-    def __init__(self, *args):
-        self.script = [0] * SCRIPT_SIZE
-        if len(args) == 1:
-            self.word = args[0]
-        if len(args) == 2:
-            self.word = args[0]
-            self.increment_script(args[1])
+    def __init__(self, word, script, size):
+        self.size = size
+        self.script = [0] * size
+        self.word = word
+        self.increment_script(script)
 
     def set_word(self, string):
         self.word = string
@@ -34,6 +31,15 @@ class Word:
     def increment_script(self, input_script):
         self.script[input_script] += 1
 
+    def get_total_val(self):
+        return sum(self.script)
+
+    def get_script_val(self, script):
+        return self.script[script]
+
+
+    def idf(self):
+        return math.log10( (self.size) / (self.get_total_val() + 1)) + 1
 
 class HashTable:
     def __init__(self, size):
@@ -56,6 +62,7 @@ class HashTable:
                 table[index_new].append([word, script])
         self.size = increased_size
         self.hash_table = table
+        self.resize += 1
 
     def checkLF(self):
         if self.items / self.size > self.load_factor:
@@ -74,7 +81,7 @@ class HashTable:
                 return
 
         # otherwise, make new word slot in the bucket
-        bucket.append(Word(input_word, script))
+        bucket.append(Word(input_word, script, self.size))
         self.items += 1
 
 
@@ -116,11 +123,17 @@ class HashTable:
         else:
             return "No record found"
 
-    def get_possible_hash_value(self, input_word):
-        return hash_djb2(input_word) % self.size
+    def get(self, input_word):
+        bucket = self.hash_table[hash_djb2(input_word) % self.size]
+        for thing in bucket:
+            if thing.word == input_word:
+                return thing
+        return None
 
     def print_hash_table(self):
         for bucket in self.hash_table:
             for word in bucket:
                 total_num = sum(word.script)
-                print(f"({self.get_possible_hash_value(word.word)}). {word.word}: {total_num}")
+                print(f"({hash_djb2(word.word)}). {word.word}: {total_num}")
+
+

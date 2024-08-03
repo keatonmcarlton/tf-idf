@@ -1,3 +1,5 @@
+from nltk import WordNetLemmatizer
+
 import hash
 import numpy as np
 
@@ -15,7 +17,9 @@ def main():
             SCRIPT = int(input("Enter script (use positive integer): "))
             myhash.set_val(WORD, SCRIPT)
             print()
-            print(f"Hash value for this word: {myhash.get_possible_hash_value(WORD)}")
+            lem = WordNetLemmatizer()
+            newword = lem.lemmatize(WORD)
+            print(f"Word lemmatized: {newword}")
             print(f"This script count of this word: {myhash.get_script_val(WORD, SCRIPT)}")
             print(f"Total count of this word: {myhash.get_total_val(WORD)}")
             print(f"Current Load Factor: {myhash.items / myhash.size}")
