@@ -37,7 +37,7 @@ def main():
     number_to_name_dict = {}
     word_count_dict = {}
     # this is the name of the folder that holds the text files of movie scripts
-    file_folder = r"C:/Users/Lily/Downloads/raw_text_lemmas/raw_text_lemmas"
+    file_folder = r"./raw_text_lemmas/raw_text_lemmas"
     num_files = 0
 
     for file in os.listdir(file_folder):
@@ -50,8 +50,8 @@ def main():
         with open(os.path.join(file_folder, file_name), 'r', encoding='utf-8') as f:
             name, num_entries = split(file_name)
             running_entries_count += num_entries
-            #some files have the same names, such as 'xmen' and 'whos your daddy' for some reason.
-            #deal with this later, TODO
+            # some files have the same names, such as 'xmen' and 'who's your daddy' for some reason.
+            # deal with this later, TODO
             name_to_number_dict[name] = i
             number_to_name_dict[i] = name
             word_count_dict[i] = num_entries
