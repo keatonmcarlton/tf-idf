@@ -29,10 +29,11 @@ class Word:
     def set_word(self, string):
         self.word = string
 
+    # if word is found in script, increment the script incident in the word object
     def increment_script(self, input_script):
         self.script[input_script] += 1
 
-
+    # gets number of scripts that has word
     def get_total_scripts(self):
         count = 0
         for script in self.script:
@@ -62,6 +63,7 @@ class HashTable:
     def create_buckets(self):
         return [[] for _ in range(self.size)]
 
+    # resizing hash function doubles the size and places them into new spots based on modulus of new size
     def resize(self):
         increased_size = self.size * 2
         table = [[] for _ in range(increased_size)]
@@ -78,7 +80,6 @@ class HashTable:
             self.resize()
 
     def set_val(self, input_word, script):
-        # self.checkLF()
         # hash it
         post_hashed_key = hash_djb2(input_word) % self.size
         bucket = self.hash_table[post_hashed_key]
@@ -95,23 +96,7 @@ class HashTable:
         self.items += 1
         self.checkLF()
 
-    # gets total use of a word in given script
-    def get_script_val(self, input_word, script):
-        # find bucket
-        bucket = self.hash_table[hash_djb2(input_word) % self.size]
-
-        # find word
-        found = False
-        for thing in bucket:
-            if thing.word == input_word:
-                found = True
-                val = thing.script[script]
-
-        if found:
-            return val
-        else:
-            return "No record found"
-
+    # gets word object from string
     def get(self, input_word):
         bucket = self.hash_table[hash_djb2(input_word) % self.size]
         for thing in bucket:
@@ -119,6 +104,7 @@ class HashTable:
                 return thing
         return None
 
+    #used only in testing, prints entire table
     def print_hash_table(self):
         for bucket in self.hash_table:
             for word in bucket:
@@ -141,5 +127,21 @@ class HashTable:
 
         if found:
             return total_val
+        else:
+            return "No record found"
+    # Used only in testing. gets total use of a word in given script
+    def get_script_val(self, input_word, script):
+        # find bucket
+        bucket = self.hash_table[hash_djb2(input_word) % self.size]
+
+        # find word
+        found = False
+        for thing in bucket:
+            if thing.word == input_word:
+                found = True
+                val = thing.script[script]
+
+        if found:
+            return val
         else:
             return "No record found"

@@ -2,14 +2,13 @@
 import re
 from zipfile import ZipFile
 import nltk
-import os
 
 from nltk import WordNetLemmatizer
 
 import hash
 nltk.download("stopwords")
 stopwords = set(nltk.corpus.stopwords.words("english"))
-
+ARBITRARY_SIZE_LIMIT = 3001
 
 def tfidf(hash_table, word_count_dictionary, word, name_to_number_dict):
     tfidf_dict = {}
@@ -39,9 +38,9 @@ def main():
     name_to_number_dict = {}
     number_to_name_dict = {}
     word_count_dict = {}
-    movie_hash = hash.HashTable(997, 3000)
+    movie_hash = hash.HashTable(997, ARBITRARY_SIZE_LIMIT)
+    #arb size limit should be the upper limit of the # of movie scripts you want to import
 
-    # for all the files or just a section
     file_count = 0
     for x in range(1, 2):
         # formula for file name
@@ -66,6 +65,7 @@ def main():
                             movie_hash.set_val(word, file_count)
                             word_count += 1
                     word_count_dict[film_title] = word_count
+                    #we need word count to calculate tf-idf
                 f.close()
                 file_count += 1
     print(f"Total entries: {file_count:,}")
@@ -88,6 +88,5 @@ def main():
     print("\nMay take a while to exit..")
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     main()
