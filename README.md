@@ -52,3 +52,14 @@ you will need to change the range. See the examples below:
 - for accessing the first four zip files: `for x in range(1, 5):`
 - for accessing the last four zip files: `for x in range(4, 9):`
 - for accessing `movie scripts 5.zip` only: `for x in range(5, 6)`
+
+## ordered map.py
+
+---
+
+This is the comparison data structure made using built in ordered dictionaries from 
+python. As a group of two, we elected to make one data structure from scratch and compare it
+to a built in. Theoretically (and practically) the ordered map should be slower than the 
+unordered map (`main.py`). Try the same searches in `ordered map.py` that you tried in 
+`main.py` (unordered map/hash table). You will notice that the results haven't changed,
+just the implementation. 
