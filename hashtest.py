@@ -23,6 +23,7 @@ def main():
             print(f"This script count of this word: {myhash.get_script_val(WORD, SCRIPT)}")
             print(f"Total count of this word: {myhash.get_total_val(WORD)}")
             print(f"Current Load Factor: {myhash.items / myhash.size}")
+            print(f"Resized Count: {myhash.resized}")
             print()
     myhash.print_hash_table()
 

@@ -59,7 +59,6 @@ class HashTable:
         self.items = 0
         self.resized = 0
 
-    #TODO: deletion?
     def create_buckets(self):
         return [[] for _ in range(self.size)]
 
@@ -67,15 +66,15 @@ class HashTable:
         increased_size = self.size * 2
         table = [[] for _ in range(increased_size)]
         for bucket in self.hash_table:
-            for word, script in bucket:
-                index_new = hash_djb2(word) % increased_size
-                table[index_new].append([word, script])
+            for word in bucket:
+                index_new = hash_djb2(word.word) % increased_size
+                table[index_new].append(word)
         self.size = increased_size
         self.hash_table = table
-        self.resize += 1
+        self.resized += 1
 
     def checkLF(self):
-        if self.items / self.size > self.load_factor:
+        if self.items / self.size >= self.load_factor:
             self.resize()
 
     def set_val(self, input_word, script):
@@ -92,6 +91,7 @@ class HashTable:
 
         # otherwise, make new word slot in the bucket
         bucket.append(Word(input_word, script, self.size))
+        self.checkLF()
         self.items += 1
 
 
