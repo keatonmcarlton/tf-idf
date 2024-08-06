@@ -1,7 +1,6 @@
 # imports Natural Language Tool Kit popular package
 import re
 from zipfile import ZipFile
-
 import nltk
 import os
 
@@ -12,14 +11,15 @@ nltk.download("stopwords")
 stopwords = set(nltk.corpus.stopwords.words("english"))
 
 
-def tfidf(hash_table, word_count_dictionary, word, number_to_name_dict):
+def tfidf(hash_table, word_count_dictionary, word, name_to_number_dict):
     tfidf_dict = {}
     for i, word_count in word_count_dictionary.items():
         idf = hash_table.get(word).idf()
         # tf = # of times word appears in document / total number of words in document
-        tf = hash_table.get(word).script[i] / word_count
+        index = name_to_number_dict[i]
+        tf = hash_table.get(word).script[index] / word_count
         # tf-idf = tf * idf
-        tfidf_dict[number_to_name_dict[i]] = tf * idf
+        tfidf_dict[i] = tf * idf
     tfidf_dict = dict(sorted(tfidf_dict.items(), key=lambda guy: guy[1], reverse=True))
     print("Top scorers:")
     count = 1
@@ -39,7 +39,7 @@ def main():
     name_to_number_dict = {}
     number_to_name_dict = {}
     word_count_dict = {}
-    movie_hash = hash.HashTable(3000)
+    movie_hash = hash.HashTable(997, 3000)
 
     # for all the files or just a section
     file_count = 0
@@ -60,10 +60,12 @@ def main():
                     number_to_name_dict[file_count] = film_title
                     stuff = f.read().decode("utf-8")
                     words = stuff.split()
-                    word_count_dict[file_count] = len(words)
+                    word_count = 0
                     for word in words:
                         if word.isalnum() and word not in stopwords:
                             movie_hash.set_val(word, file_count)
+                            word_count += 1
+                    word_count_dict[film_title] = word_count
                 f.close()
                 file_count += 1
     print(f"Total entries: {file_count:,}")
@@ -79,7 +81,7 @@ def main():
                     print()
                     print(f"Your word: '{user_input}' lemmatizes to {myword.word}")
                     print()
-                tfidf(movie_hash, word_count_dict, myword.word, number_to_name_dict)
+                tfidf(movie_hash, word_count_dict, myword.word, name_to_number_dict)
             else:
                 print("Didnt find that word.")
             print()

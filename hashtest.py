@@ -5,8 +5,8 @@ import numpy as np
 
 
 def main():
-    number_of_scripts = 15
-    myhash = hash.HashTable(number_of_scripts)
+    words = 5
+    myhash = hash.HashTable(words, 20)
     guy = True
     while guy:
         WORD = input("Enter word (use '0' to exit): ")

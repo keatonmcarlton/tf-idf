@@ -32,9 +32,6 @@ class Word:
     def increment_script(self, input_script):
         self.script[input_script] += 1
 
-    # returns number of documents containing a term
-    def get_total_val(self):
-        return sum(self.script)
 
     def get_total_scripts(self):
         count = 0
@@ -43,17 +40,19 @@ class Word:
                 count += 1
         return count
 
-    def get_script_val(self, script):
-        return self.script[script]
-
     # idf = log(# of documents / # of documents that contain term)
     # using add one smoothing to avoid dividing by zero
     def idf(self):
         return math.log10(self.size / (self.get_total_scripts() + 1)) + 1
 
+    # Used for testing. returns number of documents containing a term.
+    def get_total_val(self):
+        return sum(self.script)
+
 
 class HashTable:
-    def __init__(self, size):
+    def __init__(self, size, UBD):
+        self.upper_bound_scripts = UBD
         self.size = size
         self.load_factor = LOAD_FACTOR_LIMIT
         self.hash_table = [[] for _ in range(self.size)]
@@ -92,36 +91,14 @@ class HashTable:
                 return
 
         # otherwise, make new word slot in the bucket
-        bucket.append(Word(input_word, script, self.size))
-        self.checkLF()
+        bucket.append(Word(input_word, script, self.upper_bound_scripts))
         self.items += 1
-
-
-    # gets total use of a word throughout all scripts
-    def get_total_val(self, input_word):
-        hashed_key = hash_djb2(input_word) % self.size
-
-        # find bucket
-        bucket = self.hash_table[hashed_key]
-
-        # find word
-        found = False
-        for thing in bucket:
-            if thing.word == input_word:
-                found = True
-                total_val = sum(thing.script)
-
-        if found:
-            return total_val
-        else:
-            return "No record found"
+        self.checkLF()
 
     # gets total use of a word in given script
     def get_script_val(self, input_word, script):
-        hashed_key = hash_djb2(input_word) % self.size
-
         # find bucket
-        bucket = self.hash_table[hashed_key]
+        bucket = self.hash_table[hash_djb2(input_word) % self.size]
 
         # find word
         found = False
@@ -147,3 +124,22 @@ class HashTable:
             for word in bucket:
                 total_num = sum(word.script)
                 print(f"({hash_djb2(word.word)}). {word.word}: {total_num}")
+
+    # Used in testing. gets total use of a word throughout all scripts
+    def get_total_val(self, input_word):
+        hashed_key = hash_djb2(input_word) % self.size
+
+        # find bucket
+        bucket = self.hash_table[hashed_key]
+
+        # find word
+        found = False
+        for thing in bucket:
+            if thing.word == input_word:
+                found = True
+                total_val = sum(thing.script)
+
+        if found:
+            return total_val
+        else:
+            return "No record found"
