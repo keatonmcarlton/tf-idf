@@ -35,13 +35,20 @@ class Word:
     def get_total_val(self):
         return sum(self.script)
 
+    def get_total_scripts(self):
+        count = 0
+        for script in self.script:
+            if script > 0:
+                count += 1
+        return count
+
     def get_script_val(self, script):
         return self.script[script]
 
     # idf = log(# of documents / # of documents that contain term)
     # using add one smoothing to avoid dividing by zero
     def idf(self):
-        return math.log10(self.size / (self.get_total_val() + 1)) + 1
+        return math.log10(self.size / (self.get_total_scripts() + 1)) + 1
 
 
 class HashTable:
