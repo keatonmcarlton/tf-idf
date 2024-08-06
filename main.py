@@ -39,7 +39,7 @@ def main():
     name_to_number_dict = {}
     number_to_name_dict = {}
     word_count_dict = {}
-    movie_hash = hash.HashTable(10)
+    movie_hash = hash.HashTable(3000)
 
     # for all the files or just a section
     file_count = 0
@@ -51,7 +51,6 @@ def main():
             # num of docs
             # open each doc in each folder
             for file_name in zip_file.namelist():
-                file_count += 1
                 if file_count % 25 == 0:
                     print(file_count)
                 with zip_file.open(file_name, 'r') as f:
@@ -64,9 +63,9 @@ def main():
                     word_count_dict[file_count] = len(words)
                     for word in words:
                         if word.isalnum() and word not in stopwords:
-                            break
-                            #movie_hash.set_val(word, file_count)
+                            movie_hash.set_val(word, file_count)
                 f.close()
+                file_count += 1
     print(f"Total entries: {file_count:,}")
     exit_program = False
     while not exit_program:
