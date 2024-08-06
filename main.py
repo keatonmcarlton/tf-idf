@@ -1,4 +1,7 @@
 # imports Natural Language Tool Kit popular package
+import re
+from zipfile import ZipFile
+
 import nltk
 import os
 
@@ -36,49 +39,35 @@ def main():
     name_to_number_dict = {}
     number_to_name_dict = {}
     word_count_dict = {}
-    # this is the name of the folder that holds the text files of movie scripts
-    file_folder = r"C:/Users/Lily/Downloads/raw_text_lemmas/raw_text_lemmas"
-    num_files = 0
+    movie_hash = hash.HashTable(10)
 
-    for file in os.listdir(file_folder):
-        num_files += 1
-    movie_hash = hash.HashTable(num_files)
-    running_entries_count = 0
-    print("Total files loaded:")
-    for i, file_name in enumerate(os.listdir(file_folder)):
-        # Open file
-        with open(os.path.join(file_folder, file_name), 'r', encoding='utf-8') as f:
-            name, num_entries = split(file_name)
-            running_entries_count += num_entries
-            #some files have the same names, such as 'xmen' and 'whos your daddy' for some reason.
-            #deal with this later, TODO
-            name_to_number_dict[name] = i
-            number_to_name_dict[i] = name
-            word_count_dict[i] = num_entries
-            """
-            if i == 0:
-                name_to_number_dict[name] = i
-                number_to_name_dict[i] = name
-                word_count_dict[i] = num_entries
-            elif name != number_to_name_dict[i-1]:
-                name_to_number_dict[name] = i
-                number_to_name_dict[i] = name
-                word_count_dict[i] = num_entries
-            else:
-                i -= 1
-                word_count_dict[i] += num_entries
-            """
-            if i % 25 == 0:
-                print(i)
-            stuff = f.read()
-            words = stuff.split()
-            for word in words:
-                if word[0].isalnum():
-                    if word not in stopwords:
-                        movie_hash.set_val(word, i)
-        f.close()
-
-    print(f"Total entries: {running_entries_count:,}")
+    # for all the files or just a section
+    file_count = 0
+    for x in range(1, 2):
+        # formula for file name
+        file_name = f"data/movie scripts {x}.zip"
+        # open zip file
+        with ZipFile(file_name, 'r') as zip_file:
+            # num of docs
+            # open each doc in each folder
+            for file_name in zip_file.namelist():
+                file_count += 1
+                if file_count % 25 == 0:
+                    print(file_count)
+                with zip_file.open(file_name, 'r') as f:
+                    film_title = re.search("\/[a-zA-Z 0-9]+_", file_name).group()
+                    film_title = film_title[1:-1]
+                    name_to_number_dict[film_title] = file_count
+                    number_to_name_dict[file_count] = film_title
+                    stuff = f.read().decode("utf-8")
+                    words = stuff.split()
+                    word_count_dict[file_count] = len(words)
+                    for word in words:
+                        if word.isalnum() and word not in stopwords:
+                            break
+                            #movie_hash.set_val(word, file_count)
+                f.close()
+    print(f"Total entries: {file_count:,}")
     exit_program = False
     while not exit_program:
         user_input = input("Enter word to be analyzed (0 to exit): ")

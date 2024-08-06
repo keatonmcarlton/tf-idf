@@ -9,9 +9,7 @@ import math
 import re
 import os
 from zipfile import ZipFile
-
 from nltk import WordNetLemmatizer
-
 import hash
 nltk.download("stopwords")
 
@@ -37,8 +35,6 @@ def tfidf(input_word, words, file_count):
     for count, (film, tf_idf) in enumerate(sorted_tf_idf):
         if count < 5:
             print(f"({count + 1}). {film}: {tf_idf:.2e}")
-
-
 
 
 def main():
@@ -83,13 +79,6 @@ def main():
     while user_word != "0":
         tfidf(lemmatizer.lemmatize(user_word), words, file_count)
         user_word = input('Enter word to be analyzed (0 to exit): ')
-
-
-
-
-
-
-
 
 
 if __name__ == "__main__":

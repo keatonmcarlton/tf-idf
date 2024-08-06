@@ -16,6 +16,7 @@ def hash_djb2(s):
         hash = ((hash << 5) + hash) + ord(x)
     return hash & 0xFFFFFFFF
 
+
 # class for each individual word object in a script
 class Word:
 
@@ -79,6 +80,7 @@ class HashTable:
             self.resize()
 
     def set_val(self, input_word, script):
+        # self.checkLF()
         # hash it
         post_hashed_key = hash_djb2(input_word) % self.size
         bucket = self.hash_table[post_hashed_key]
@@ -145,5 +147,3 @@ class HashTable:
             for word in bucket:
                 total_num = sum(word.script)
                 print(f"({hash_djb2(word.word)}). {word.word}: {total_num}")
-
-
