@@ -1,7 +1,6 @@
 # imports Natural Language Tool Kit popular package
 import nltk
 import os
-
 from nltk import WordNetLemmatizer
 
 import hash
@@ -37,7 +36,7 @@ def main():
     number_to_name_dict = {}
     word_count_dict = {}
     # this is the name of the folder that holds the text files of movie scripts
-    file_folder = r"C:/Users/Lily/Downloads/raw_text_lemmas/raw_text_lemmas"
+    file_folder = r"data/movie scripts 1.zip"
     num_files = 0
 
     for file in os.listdir(file_folder):
