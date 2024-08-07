@@ -1,5 +1,4 @@
 # hash table syntax borrowed from https://www.geeksforgeeks.org/hash-map-in-python/
-
 # hash function adapted from https://gist.github.com/mengzhuo/180cd6be8ba9e2743753, utilizes
 # djb2 made by Dan J Bernstein, using Meng Zhuo's syntax from github
 
@@ -104,7 +103,7 @@ class HashTable:
                 return thing
         return None
 
-    #used only in testing, prints entire table
+    # used only in testing, prints entire table
     def print_hash_table(self):
         for bucket in self.hash_table:
             for word in bucket:
@@ -113,10 +112,8 @@ class HashTable:
 
     # Used in testing. gets total use of a word throughout all scripts
     def get_total_val(self, input_word):
-        hashed_key = hash_djb2(input_word) % self.size
-
         # find bucket
-        bucket = self.hash_table[hashed_key]
+        bucket = self.hash_table[hash_djb2(input_word) % self.size]
 
         # find word
         found = False

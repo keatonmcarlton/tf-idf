@@ -42,7 +42,7 @@ def main():
     #arb size limit should be the upper limit of the # of movie scripts you want to import
 
     file_count = 0
-    for x in range(1, 2):
+    for x in range(1, 9):
         # formula for file name
         file_name = f"data/movie scripts {x}.zip"
         # open zip file

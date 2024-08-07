@@ -26,7 +26,7 @@ def tfidf(input_word, words, file_count):
     for film, freq, total in films:
         tf = freq / total
         # idf = log(# of documents / # of documents that contain term)
-        idf = math.log10(file_count / len(films))
+        idf = math.log10(file_count / (len(films) + 1)) + 1
         tfidf_dict[film] = (tf * idf)
 
     # print top scoring tf-idfs
@@ -43,16 +43,18 @@ def main():
     stopwords.append(',')
     print("Loading data...")
     # for all the files or a section of the files (it's a lot of data)
-    for x in range(1, 2):
+    file_count = 0
+    for x in range(1, 9):
         # formula for file name
         file_name = f"data/movie scripts {x}.zip"
         # open zip file
         with ZipFile(file_name, "r") as zip_file:
             # number of documents
-            file_count = 0
             # open each doc in each folder
             for file_name in zip_file.namelist():
                 file_count += 1
+                if file_count % 25 == 0:
+                    print(file_count)
                 with zip_file.open(file_name) as file:
                     # find film title from doc name
                     film_title = re.search("\/[ a-z A-Z 0-9]+_", file_name).group()
